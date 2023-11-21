@@ -1,3 +1,5 @@
+import os
+
 import scrapy
 
 
@@ -37,6 +39,10 @@ class AlzaProductSpider(scrapy.Spider):
         Writes each extracted product URL to the specified file.
         """
         links = response.css('a.name.browsinglink::attr(href)').getall()
+        if not os.path.exists(self.product_file):
+            with open(self.product_file, 'w'):
+                pass
+
         with open(self.product_file, 'a') as file:
             for link in links:
                 product_url = self.base_url + link + "#parametry"

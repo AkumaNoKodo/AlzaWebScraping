@@ -1,4 +1,6 @@
 import json
+import os
+
 import pandas as pd
 import requests
 from datetime import datetime
@@ -36,7 +38,7 @@ class AlzaProductParametersExtractor:
         process.crawl(AlzaProductSpider,
                       target=category_url,
                       number_of_pages=number_of_pages,
-                      file_name=self.product_file)
+                      out_product_file_name=self.product_file)
         process.start()
 
     def process_products(self) -> None:
@@ -47,6 +49,14 @@ class AlzaProductParametersExtractor:
         them to a JSON file. Each product's parameters are extracted using the 'get_parameters'
         method and stored in a dictionary format.
         """
+        if not os.path.exists(self.data_file):
+            with open(self.data_file, 'w'):
+                pass
+
+        if not os.path.exists(self.product_file):
+            with open(self.product_file, 'w'):
+                pass
+
         with open(self.data_file, 'a') as data_file, open(self.product_file, 'r') as file:
             lines = file.readlines()
             for idx, line in enumerate(lines, 1):
